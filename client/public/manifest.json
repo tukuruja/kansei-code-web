@@ -1,0 +1,22 @@
+{
+  "name": "ツクルンジャー - 建設業向け統合管理",
+  "short_name": "ツクルンジャー",
+  "description": "工事写真管理・電子納品・見積原価管理を一元化する建設業向けプラットフォーム",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#ea580c",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

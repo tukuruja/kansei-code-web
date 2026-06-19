@@ -131,6 +131,18 @@ export default function Header() {
           hoverColor="hover:bg-sky-700"
           href="/ai-estimation-audit"
         />
+        <NavButton
+          label="📷 工事写真"
+          color="bg-orange-500"
+          hoverColor="hover:bg-orange-600"
+          href="/photos"
+        />
+        <NavButton
+          label="📦 電子納品"
+          color="bg-teal-600"
+          hoverColor="hover:bg-teal-700"
+          href="/delivery"
+        />
       </nav>
     </header>
   );
