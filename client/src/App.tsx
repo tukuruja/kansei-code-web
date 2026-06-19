@@ -16,6 +16,8 @@ import {
   MachinesPriceTable,
   CutterPriceTable,
 } from './pages/PriceTablePages';
+import PhotosPage from './pages/PhotosPage';
+import DeliveryPage from './pages/DeliveryPage';
 
 function Router() {
   return (
@@ -61,6 +63,8 @@ function Router() {
       <Route path={'/price-tables/secondary'} component={SecondaryPriceTable} />
       <Route path={'/price-tables/machines'} component={MachinesPriceTable} />
       <Route path={'/price-tables/cutter'} component={CutterPriceTable} />
+      <Route path={'/photos'} component={PhotosPage} />
+      <Route path={'/delivery'} component={DeliveryPage} />
       <Route path={'/404'} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
