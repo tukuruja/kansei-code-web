@@ -170,11 +170,18 @@ function vitePluginProjectStateApi(): Plugin {
  * Production build only: remove the dev-only Manus debug collector that is
  * copied verbatim from client/public/__manus__ into the output directory.
  */
-function vitePluginStripManusPublicAssets(outDir: string): Plugin {
+function vitePluginStripManusPublicAssets(): Plugin {
+  // Resolved from the final config so a CLI `--outDir` override (or any later
+  // change to build.outDir) is honoured instead of a hard-coded path.
+  let outDir = "";
   return {
     name: "strip-manus-public-assets",
     apply: "build",
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
     closeBundle() {
+      if (!outDir) return;
       fs.rmSync(path.join(outDir, "__manus__"), {
         recursive: true,
         force: true,
@@ -201,7 +208,7 @@ export default defineConfig(({ command }) => {
           vitePluginManusDebugCollector(),
           vitePluginProjectStateApi(),
         ]
-      : [vitePluginStripManusPublicAssets(OUT_DIR)]),
+      : [vitePluginStripManusPublicAssets()]),
   ];
 
   return {
