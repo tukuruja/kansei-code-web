@@ -188,7 +188,7 @@ export default function GmailInboxPanel({
 {`GMAIL_CLIENT_ID=your_client_id
 GMAIL_CLIENT_SECRET=your_client_secret
 GMAIL_REFRESH_TOKEN=your_refresh_token
-GMAIL_TARGET_ADDRESS=merumaga.kensetusentai@gmail.com`}
+GMAIL_TARGET_ADDRESS=you@example.com`}
             </pre>
             <p className="mt-2 text-xs text-amber-700">
               Google Cloud Console →「認証情報」→「OAuth 2.0 クライアント ID」から取得できます。

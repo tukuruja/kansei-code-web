@@ -89,7 +89,7 @@ STEP 1: 以下の URL をブラウザで開いてください。
 
 ${authUrl}
 
-STEP 2: Gmailアカウント (merumaga.kensetusentai@gmail.com) でログインし、
+STEP 2: 受信対象の Gmail アカウントでログインし、
         権限を許可してください。
 
 STEP 3: 表示された「認可コード」を下のプロンプトに貼り付けてください。
