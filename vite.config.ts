@@ -166,46 +166,76 @@ function vitePluginProjectStateApi(): Plugin {
   };
 }
 
-const plugins = [
-  react(),
-  tailwindcss(),
-  jsxLocPlugin(),
-  vitePluginManusRuntime(),
-  vitePluginManusDebugCollector(),
-  vitePluginProjectStateApi(),
-];
+/**
+ * Production build only: remove the dev-only Manus debug collector that is
+ * copied verbatim from client/public/__manus__ into the output directory.
+ */
+function vitePluginStripManusPublicAssets(outDir: string): Plugin {
+  return {
+    name: "strip-manus-public-assets",
+    apply: "build",
+    closeBundle() {
+      fs.rmSync(path.join(outDir, "__manus__"), {
+        recursive: true,
+        force: true,
+      });
+    },
+  };
+}
 
-export default defineConfig({
-  plugins,
-  resolve: {
-    alias: {
-      "@": path.resolve(import.meta.dirname, "client", "src"),
-      "@shared": path.resolve(import.meta.dirname, "shared"),
-      "@assets": path.resolve(import.meta.dirname, "attached_assets"),
+const OUT_DIR = path.resolve(import.meta.dirname, "dist/public");
+
+export default defineConfig(({ command }) => {
+  // Manus runtime / debug collector / local API middlewares are development
+  // tooling only. Without this gate the manus runtime (~360KB) was inlined
+  // into the production index.html on every deploy.
+  const isDevServer = command === "serve";
+
+  const plugins: Plugin[] = [
+    react(),
+    tailwindcss(),
+    jsxLocPlugin(),
+    ...(isDevServer
+      ? [
+          vitePluginManusRuntime(),
+          vitePluginManusDebugCollector(),
+          vitePluginProjectStateApi(),
+        ]
+      : [vitePluginStripManusPublicAssets(OUT_DIR)]),
+  ];
+
+  return {
+    plugins,
+    resolve: {
+      alias: {
+        "@": path.resolve(import.meta.dirname, "client", "src"),
+        "@shared": path.resolve(import.meta.dirname, "shared"),
+        "@assets": path.resolve(import.meta.dirname, "attached_assets"),
+      },
     },
-  },
-  envDir: path.resolve(import.meta.dirname),
-  root: path.resolve(import.meta.dirname, "client"),
-  build: {
-    outDir: path.resolve(import.meta.dirname, "dist/public"),
-    emptyOutDir: true,
-  },
-  server: {
-    port: 3000,
-    strictPort: false, // Will find next available port if 3000 is busy
-    host: true,
-    allowedHosts: [
-      ".manuspre.computer",
-      ".manus.computer",
-      ".manus-asia.computer",
-      ".manuscomputer.ai",
-      ".manusvm.computer",
-      "localhost",
-      "127.0.0.1",
-    ],
-    fs: {
-      strict: true,
-      deny: ["**/.*"],
+    envDir: path.resolve(import.meta.dirname),
+    root: path.resolve(import.meta.dirname, "client"),
+    build: {
+      outDir: OUT_DIR,
+      emptyOutDir: true,
     },
-  },
+    server: {
+      port: 3000,
+      strictPort: false, // Will find next available port if 3000 is busy
+      host: true,
+      allowedHosts: [
+        ".manuspre.computer",
+        ".manus.computer",
+        ".manus-asia.computer",
+        ".manuscomputer.ai",
+        ".manusvm.computer",
+        "localhost",
+        "127.0.0.1",
+      ],
+      fs: {
+        strict: true,
+        deny: ["**/.*"],
+      },
+    },
+  };
 });
